@@ -1,12 +1,11 @@
 const express = require('express');
 const router  = express.Router();
-const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { protect } = require('../middleware/authMiddleware');
 
 // POST /api/payments/create-intent
 router.post('/create-intent', protect, async (req, res) => {
-  const { amount } = req.body; // amount in cents
-
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // ← moved inside
+  const { amount } = req.body;
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
